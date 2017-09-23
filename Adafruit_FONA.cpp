@@ -25,7 +25,7 @@ Adafruit_FONA::Adafruit_FONA(int8_t rst)
 {
   _rstpin = rst;
 
-  apn = F("FONAnet");
+  apn = F("wholesale");
   apnusername = 0;
   apnpassword = 0;
   mySerial = 0;
@@ -471,6 +471,8 @@ int8_t Adafruit_FONA::getNumSMS(void) {
   if (! sendCheckReply(F("AT+CMGF=1"), ok_reply)) return -1;
 
   // ask how many sms are stored
+  if (sendParseReply(F("AT+CPMS?"), F("\"ME\","), &numsms))
+    return numsms;
   if (sendParseReply(F("AT+CPMS?"), F("\"SM\","), &numsms)) 
     return numsms;
   if (sendParseReply(F("AT+CPMS?"), F("\"SM_P\","), &numsms)) 
@@ -800,7 +802,7 @@ int8_t Adafruit_FONA::GPSstatus(void) {
   else {
     // 808 V1 looks for specific 2D or 3D fix state.
     getReply(F("AT+CGPSSTATUS?"));
-    char *p = prog_char_strstr(replybuffer, (prog_char*)F("SSTATUS: Location "));
+    char *p = prog_char_strstr(replybuffer, (prog_char*)F("STATUS: Location "));
     if (p == 0) return -1;
     p+=18;
     readline(); // eat 'OK'

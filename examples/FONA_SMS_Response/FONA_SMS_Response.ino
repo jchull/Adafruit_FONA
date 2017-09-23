@@ -85,6 +85,7 @@ void loop() {
   
   if (fona.available())      //any data available from the FONA?
   {
+    Serial.println(F("Message found"));
     int slot = 0;            //this will be the slot number of the SMS
     int charCount = 0;
     //Read the notification into fonaInBuffer
